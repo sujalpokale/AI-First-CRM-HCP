@@ -26,6 +26,11 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "AI-First CRM HCP API is running"}
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "model": settings.groq_model}
