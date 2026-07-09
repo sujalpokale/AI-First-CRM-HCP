@@ -1,4 +1,4 @@
-import { Calendar, Mic, Plus, RefreshCcw, Save, Search, TestTube2 } from "lucide-react";
+import { Calendar, Edit, Mic, Plus, RefreshCcw, Save, Search, TestTube2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetDraft, saveInteraction, updateField } from "../store/interactionSlice.js";
 import { Field, TextArea, TextInput } from "./Field.jsx";
@@ -7,7 +7,7 @@ const hcpOptions = ["Dr. Smith", "Dr. Ananya Rao", "Dr. Michael Chen", "Dr. Priy
 
 export function InteractionForm() {
   const dispatch = useDispatch();
-  const { draft, saveStatus } = useSelector((state) => state.interaction);
+  const { draft, saveStatus, interactionId } = useSelector((state) => state.interaction);
   const setField = (field) => (value) => dispatch(updateField({ field, value }));
 
   return (
@@ -15,7 +15,10 @@ export function InteractionForm() {
       <div className="panel-header">
         <div>
           <p className="eyebrow">HCP Module</p>
-          <h1>Log HCP Interaction</h1>
+          <div className="title-with-badge">
+            <h1>{interactionId ? "Edit Interaction" : "Log HCP Interaction"}</h1>
+            {interactionId && <span className="edit-id-badge">ID: #{interactionId}</span>}
+          </div>
         </div>
         <button className="icon-button" type="button" onClick={() => dispatch(resetDraft())} aria-label="Reset form" title="Reset form">
           <RefreshCcw size={18} />
@@ -114,8 +117,12 @@ export function InteractionForm() {
       </div>
 
       <button className="primary save-button" type="button" onClick={() => dispatch(saveInteraction())}>
-        <Save size={18} />
-        {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Saved" : "Log Interaction"}
+        {interactionId ? <Edit size={18} /> : <Save size={18} />}
+        {saveStatus === "saving" 
+          ? (interactionId ? "Updating..." : "Saving...") 
+          : saveStatus === "saved" 
+            ? (interactionId ? "Updated" : "Saved") 
+            : (interactionId ? "Update Interaction" : "Log Interaction")}
       </button>
     </section>
   );

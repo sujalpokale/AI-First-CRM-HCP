@@ -60,10 +60,14 @@ def _heuristic_extract(message: str, draft: dict) -> dict:
     if not extracted.get("interaction_time"):
         extracted["interaction_time"] = datetime.now().strftime("%H:%M")
 
-    if "call" in lower:
+    if "call" in lower or "phone" in lower:
         extracted["interaction_type"] = "Phone Call"
-    elif "email" in lower:
+    elif "email" in lower or "mail" in lower:
         extracted["interaction_type"] = "Email"
+    elif "virtual" in lower or "zoom" in lower or "teams" in lower or "meet" in lower:
+        extracted["interaction_type"] = "Virtual Meeting"
+    elif "conference" in lower or "seminar" in lower or "congress" in lower:
+        extracted["interaction_type"] = "Conference"
     else:
         extracted["interaction_type"] = extracted.get("interaction_type") or "Meeting"
 
@@ -81,9 +85,12 @@ def _llm_extract(message: str, draft: dict) -> dict:
     )
     system = (
         "Extract HCP CRM interaction fields as compact JSON only. "
-        "Fields: hcp_name, interaction_type, interaction_date, interaction_time, attendees, "
-        "topics_discussed, materials_shared, samples_distributed, sentiment, outcomes, "
-        "follow_up_actions, summary, compliance_flags. Preserve existing draft values when unknown."
+        "Fields: hcp_name, "
+        "interaction_type (must be one of: Meeting, Phone Call, Email, Conference, Virtual Meeting), "
+        "interaction_date, interaction_time, attendees, "
+        "topics_discussed, materials_shared, samples_distributed, "
+        "sentiment (must be one of: Positive, Neutral, Negative), "
+        "outcomes, follow_up_actions, summary, compliance_flags. Preserve existing draft values when unknown."
     )
     response = llm.invoke(
         [
