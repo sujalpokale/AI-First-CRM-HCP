@@ -2,6 +2,10 @@
 
 An implementation of an **AI-first Healthcare Professional (HCP) CRM interaction logger** featuring Redux-managed React UI, an interactive agentic chat helper, and database persistence.
 
+### 🌐 Live Demo: [https://ai-crm-hcp.sujalpokale.engineer/](https://ai-crm-hcp.sujalpokale.engineer/)
+
+![AI-First CRM HCP Dashboard](screenshot.png)
+
 ---
 
 ## 🌟 Key Features
